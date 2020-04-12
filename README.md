@@ -3,7 +3,7 @@
 ### Lab 11
 Number and name of feature | Estimate of time needed to complete | Start time | Finish time | Actual time
 ---------------------------|-------------------------------------|------------|-------------|------------
-Feature #1 | ? | ? | ? | ?
+Feature #1 | 1h | 2:30pm | 3:20pm | 50min
 Feature #2 | ? | ? | ? | ?
 Feature #3 | ? | ? | ? | ?
 Feature #4 | ? | ? | ? | ?
@@ -14,10 +14,10 @@ Feature #6 | ? | ? | ? | ?
 # Project Name
 
 **Author**:Ahmed Abu Samaan
-**Version**: 1.0.0 
+**Version**: 2.0.0 
 
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for a Code 301 class. (i.e. What's your problem domain?) -->
+the application involves requesting books from the API. The client can submit a form to search for a book by title or author, and the search results will then be rendered as a list in the browser.
 
 ## Getting Started
 <!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
@@ -26,10 +26,4 @@ Feature #6 | ? | ? | ? | ?
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
-
-01-01-2001 4:59pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
-
-## Credits and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
--->
+3:20pm the app is ready with full files + render
