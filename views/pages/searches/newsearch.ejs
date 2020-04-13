@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search</title>
-</head>
-<body>
-    <main>
-        <h4>Search by Title or Author</h4>
-      
+  <%- include('../../layout/head.ejs') %>
+  <body>
+    <%- include('../../layout/header.ejs') %>
+      <main>
+        <h4 class="view-title">Search by Title or Author</h4>
         <form id="create-form" action="/searches" method="post">
           <input type="text" name="search" placeholder="Enter a title or author" required>
           <fieldset>
@@ -17,7 +13,6 @@
               <input type="radio" id="title" name="search" value="title" required>
             </label>
           </fieldset>
-          
           <fieldset>
             <label for="author">
               <span>Author</span>
@@ -26,8 +21,7 @@
           </fieldset>
           <button class="lng-btn" type="submit">Search the Google Books API</button>
         </form>
-      
-      </main>
-      
-</body>
+    </main>
+    <%- include('../../layout/footer.ejs') %>
+  </body>
 </html>

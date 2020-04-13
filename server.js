@@ -1,56 +1,87 @@
 'use strict';
 
 require('dotenv').config();
-
 const express = require('express');
 const superagent = require('superagent');
-// const cors = require('cors');
-const PORT = process.env.PORT || 4000;
+const pg = require('pg');
+const client = new pg.Client(process.env.DATABASE_URL);
+
 const app = express();
-// app.use(cors());
-app.use(express.urlencoded({extended:true}));
+const PORT = process.env.PORT || 3000;
+client.connect();
+client.on('error', error => {
+  console.error(error);
+});
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => {
-  res.render('pages/index');
-});
-
-app.get('/hello', (req, res) => {
-    res.render('pages/index');
-  });
-
-app.get('/searches/new', (req, res) => {
-    res.render('pages/searches/new');
-});
-
-app.get('/searches/show', (req, res) => {
-    res.render('pages/searches/show');
-});
-
-app.post('/searches/show', (req, res) => { 
-    const url = `https://www.googleapis.com/books/v1/volumes?q=${req.body.search}`;
-    superagent.get(url).then((apiResponse) => {
-        const book = apiResponse.body.items.map((data) => {
-            return new Book(data);
-          });
-          res.render('pages/searches/show.ejs', { book: book });
-    })
-    .catch((err) => errorHandler(err, req, res));
-  });
-
-function Book(data) {
-    this.image_url = data.volumeInfo.imageLinks.thumbnail  ? data.volumeInfo.imageLinks.thumbnail : "DEFULT IMG";
-    this.title = data.volumeInfo.title ?  data.volumeInfo.title : "DEFULT TITLE";
-    this.author = data.volumeInfo.authors ? data.volumeInfo.authors : "DEFULT AUTHOR";
-    this.description = data.volumeInfo.description ? data.volumeInfo.description : "DEFULT DESCRIPTION";
-  }
+app.get('/', newSearch);
+app.get('/search', searchRender)
+app.post('/searches', createSearch);
+app.get('/books/:id', booksParamPlaceHolder)
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
-app.listen(PORT, () => console.log('OK!'));
 
-const handleError = (error, response) => {
-    response.render('pages/error', {error: error})
-  }
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+
+function Book(info) {
+  const placeholderImage = 'https://i.imgur.com/J5LVHEL.jpg';
+  let myHttp = /^(http:\/\/)/g
+  this.title = info.title ? info.title : 'No title available';
+  this.author = info.authors ? info.authors[0] : 'No author available';
+  this.isbn = info.industryIdentifiers ? `ISBN_13 ${info.industryIdentifiers[0].identifier}` : 'No ISBN available';
+  this.image_url = info.imageLinks ? info.imageLinks.smallThumbnail.replace(myHttp, 'https://') : placeholderImage;
+  this.description = info.description ? info.description : 'No description available';
+  this.id = info.industryIdentifiers ? `${info.industryIdentifiers[0].identifier}` : '';
+}
+
+function newSearch(request, response) {
+  const bookSQL = 'SELECT * FROM books';
+  client.query(bookSQL)
+    .then( results => {
+      if (results.rowCount === 0) {
+        response.render('pages/searches/newsearch.ejs');
+      }
+      else {
+        response.render('pages/index.ejs', {books: results.rows});
+      }
+    })
+    .catch( error => {
+      console.error(error);
+    });
+}
+
+function createSearch(request, response) {
+  let url = 'https://www.googleapis.com/books/v1/volumes?q=';
+
+  if (request.body.search[1] === 'title') { url += `+intitle:${request.body.search[0]}`; }
+  if (request.body.search[1] === 'author') { url += `+inauthor:${request.body.search[0]}`; }
+
+  superagent.get(url)
+    .then(apiResponse => apiResponse.body.items.map(bookResult => new Book(bookResult.volumeInfo)))
+    .then(results => response.render('pages/searches/show', { searchResults: results }))
+    .catch(err => handleError(err, response));
+}
+
+function searchRender(req, res){
+  res.render('pages/searches/newsearch');
+}
+
+function booksParamPlaceHolder(request, response){
+  const SQL = 'SELECT * FROM BOOKS WHERE id=$1';
+  const values = [request.params.id];
+
+  client.query(SQL, values)
+    .then( result => {
+      console.log(result);
+      response.render('pages/details', {book: result.rows[0]})
+    })
+    .catch(error => console.error(error));
+}
+
+function handleError(error, response) {
+  response.render('pages/error', { error: error });
+}
