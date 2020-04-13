@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Ahmed199764/book_app#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.2",
     "express": "^4.17.1",

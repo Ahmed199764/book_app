@@ -4,16 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Show</title>
 </head>
 
 <body>
     <h1>Search Results</h1>
     <ul>
+      <% book.forEach(item=>{%>
         <li>
-            
+          <img src="<% =item.image_url %>">
+          <p><% =item.title %></p>
+          <p><% =item.author %></p>
+          <p><% =item.description %></p>
         </li>
-    </ul>
-</body>
+        <%})%>
+  </ul>
+  </body>
 
 </html>
