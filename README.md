@@ -5,7 +5,7 @@ Number and name of feature | Estimate of time needed to complete | Start time | 
 ---------------------------|-------------------------------------|------------|-------------|------------
 Feature #1 | 1h | 2:30pm | 3:20pm | 50min
 Feature #2 | 1h | 3:30pm | 4:30pm | 1h
-Feature #3 | 2h | 9pm | 4:30am | 7:30h not completed :( i have endless errors with EJS
+Feature #3 | 2h | 9pm |5:00am | 8h not completed :( i have endless errors with EJS
 Feature #4 | ? | ? | ? | ?
 Feature #5 | ? | ? | ? | ?
 Feature #6 | ? | ? | ? | ?
