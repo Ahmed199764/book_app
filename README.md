@@ -6,8 +6,8 @@ Number and name of feature | Estimate of time needed to complete | Start time | 
 Feature #1 | 1h | 6pm | 7:20pm | 1h and 20min
 Feature #2 | 1h | 7:30pm | 9:30pm | 2h
 Feature #3 | 2h | 10pm | 1:30am | 3:30h 
-Feature #4 | 2h | ? | ? | ?
-Feature #5 | 1h | ? | ? | ?
+Feature #4 | 2h | 10pm | 1:20am | 3h and 20min
+
 
 ## notice : i took around 3~4h to finish lab 11 before i start this one from 2pm to 6pm
 ## i also forget to update my READ.ME after each featur , i forgot about updates in read.me file , i did just finish the lab 11+12 and pushed them , then i noticed the read.me file , so i made new branch for read.me file and made the estimate table time.
@@ -30,4 +30,5 @@ libaries : dotenv , ejs , express , pg , superagent.
 
 ## Change Log
 2am the app functions is ready , only design left.
+1:20am the app design is ready.
 
