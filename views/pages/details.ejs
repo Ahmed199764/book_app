@@ -14,7 +14,13 @@
             <p>ISBN: <%= book.isbn %></p>
             <p>Bookshelf: <%= book.bookshelf %></p>
           </li>
+          <button class="select-button" type="submit">Update Book</button>
       </ul>
+      <form class="delete-form" action="/books/:id" method="post"> 
+        <input type="hidden" name="_method" value="<%- 'delete' %>"/>
+        <input type="hidden" name="id" value="<%= book.id %>"/>
+        <button class="delete-button" type="submit">Delete Book</button>
+      </form>
     </main>
     <%- include('../../views/layout/footer') %>
   </body>

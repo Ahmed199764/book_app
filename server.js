@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const superagent = require('superagent');
 const pg = require('pg');
+const methodOverride = require('method-override');
 const client = new pg.Client(process.env.DATABASE_URL);
 
 const app = express();
@@ -13,15 +14,26 @@ client.on('error', error => {
   console.error(error);
 });
 
+app.use(methodOverride((request, response) => {
+  if (request.body && typeof request.body === 'object' && '_method' in request.body) {
+    // look in urlencoded POST bodies and delete it
+    let method = request.body._method;
+    delete request.body._method;
+    return method;
+  }
+}))
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
 
 app.get('/', newSearch);
-app.get('/search', searchRender)
+app.get('/search', searchRender);
 app.post('/searches', createSearch);
-app.get('/books/:id', booksParamPlaceHolder)
+app.get('/books/:id', booksParamPlaceHolder);
+app.put('/update/:id', updateBook);
+app.delete('/books/:id', deleteBook);
 
 app.get('*', (request, response) => response.status(404).send('This route does not exist'));
 
@@ -80,6 +92,24 @@ function booksParamPlaceHolder(request, response){
       response.render('pages/details', {book: result.rows[0]})
     })
     .catch(error => console.error(error));
+}
+
+function updateBook(request, response){
+  let {title, author, isbn, image_url, description, bookshelf, id} = request.body;
+  let SQL = `UPDATE books SET title=$1, author=$2, isbn=$3, image_url=$4, description=$5, bookshelf=$6 WHERE id=$7;`;
+  let values = [title, author, isbn, image_url, description, bookshelf, id];
+
+  client.query(SQL, values)
+    .then(response.redirect(`/books/${id}`))
+    .catch(error => handleError(error, response));
+}
+
+function deleteBook(request, response){
+  const SQL = `DELETE FROM books WHERE id=${request.body.id}`;
+
+  client.query(SQL)
+    .then(response.redirect('/'))
+    .catch(error => handleError(error, response));
 }
 
 function handleError(error, response) {
